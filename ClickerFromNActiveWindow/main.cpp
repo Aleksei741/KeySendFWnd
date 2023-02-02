@@ -157,22 +157,34 @@ DWORD WINAPI MainThread(CONST LPVOID lpParam)
 			switch (KeyPressDown)
 			{
 			case 81:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F1, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F1, 0x002C0001);				
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F1, 0x002C0001);
 				break;
 			case 87:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F2, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F2, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F2, 0);
 				break;
 			case 69:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F3, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F3, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F3, 0);
 				break;
 			case 82:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F4, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F4, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F4, 0);
 				break;
 			case 84:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F5, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F5, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F5, 0);
 				break;
 			case 89:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F6, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F6, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F6, 0);
 				break;
 			}
 			bKeyPressDown = KeyPressDown;
@@ -184,22 +196,34 @@ DWORD WINAPI MainThread(CONST LPVOID lpParam)
 			switch (KeyPressUp)
 			{
 			case 81:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F1, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F1, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F1, 0x002C0001);
 				break;
 			case 87:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F2, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F2, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F2, 0);
 				break;
 			case 69:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F3, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F3, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F3, 0);
 				break;
 			case 82:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F4, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F4, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F4, 0);
 				break;
 			case 84:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F5, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F5, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F5, 0);
 				break;
 			case 89:
-				PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F6, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F6, 0x002C0001);
+				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F6, 0);
 				break;
 			}
 			bKeyPressUp = KeyPressUp;
