@@ -73,6 +73,7 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 		break;
 
 	case WM_CREATE:	//вызывается при создании окна		
+		srand(1792);
 		MainWindAddWidgets(hWnd);
 		SetHook(hWnd, NULL, NULL, NULL);
 		hTreadMain = CreateThread(NULL, 0, MainThread, 0, 0, NULL);
@@ -136,6 +137,8 @@ void MainWindAddWidgets(HWND hWnd)
 
 	hWndKeyPressDown = CreateWindowA("static", "Down: ", WS_VISIBLE | WS_CHILD, 10, 220, 100, 50, hWnd, NULL, g_hInst, NULL);
 	hWndKeyPressUp = CreateWindowA("static", "Up: ", WS_VISIBLE | WS_CHILD, 150, 220, 100, 50, hWnd, NULL, g_hInst, NULL);
+
+	hWndErrorMassage = CreateWindowA("static", "  ", WS_VISIBLE | WS_CHILD, 300, 220, 100, 50, hWnd, NULL, g_hInst, NULL);
 }
 
 DWORD WINAPI MainThread(CONST LPVOID lpParam)
@@ -143,94 +146,84 @@ DWORD WINAPI MainThread(CONST LPVOID lpParam)
 	TCHAR szBuf[128];
 	TCHAR bKeyPressDown = 0;
 	TCHAR bKeyPressUp = 0;
-
+	TCHAR ErrorCode = 0;
+	TCHAR FlagSecure = 0;
+	
 	while (1)
 	{
 		StringCchPrintf(szBuf, 128 / sizeof(CHAR), L"Down: %d\0", bKeyPressDown);
 		SetWindowText(hWndKeyPressDown, szBuf);
 
-		StringCchPrintf(szBuf, 128 / sizeof(CHAR), L"Up: %d\0", bKeyPressUp);
+		StringCchPrintf(szBuf, 128 / sizeof(CHAR), L"Up: %d\0", KeyPressUp);
 		SetWindowText(hWndKeyPressUp, szBuf);
+
+		StringCchPrintf(szBuf, 128 / sizeof(CHAR), L"Error: %d\0", ErrorCode);
+		SetWindowText(hWndErrorMassage, szBuf);
 
 		if (KeyPressDown != 0)
 		{
 			switch (KeyPressDown)
 			{
 			case 81:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F1, 0x002C0001);				
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F1, 0x002C0001);
+
+				KeyPress(0x31);
 				break;
 			case 87:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F2, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F2, 0);
+				KeyPress(0x32);
 				break;
 			case 69:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F3, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F3, 0);
+				KeyPress(0x33);
 				break;
 			case 82:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F4, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F4, 0);
+				KeyPress(0x34);
 				break;
 			case 84:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F5, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F5, 0);
+				KeyPress(0x35);
 				break;
 			case 89:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F6, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F6, 0);
+				KeyPress(0x36);
 				break;
 			}
 			bKeyPressDown = KeyPressDown;
 			KeyPressDown = 0;
-		}
 
-		if (KeyPressUp != 0)
-		{
-			switch (KeyPressUp)
-			{
-			case 81:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F1, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F1, 0x002C0001);
-				break;
-			case 87:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F2, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F2, 0);
-				break;
-			case 69:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F3, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F3, 0);
-				break;
-			case 82:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F4, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F4, 0);
-				break;
-			case 84:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F5, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F5, 0);
-				break;
-			case 89:
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
-				SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F6, 0x002C0001);
-				//PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, VK_F6, 0);
-				break;
-			}
-			bKeyPressUp = KeyPressUp;
-			KeyPressUp = 0;
+			if(ErrorCode==0)
+				ErrorCode = GetLastError();
 		}
-
-		Sleep(10);
+		Sleep(RangedRand(100, 180));
 	}
 	return NULL;
+}
+
+UINT KeyPress(UCHAR Key)
+{
+	UINT ScanCode;
+	LPARAM KeyParam = 0;
+
+	ScanCode = MapVirtualKey(Key, 0);
+	PostMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+	KeyParam = ScanCode << 16;
+	KeyParam = KeyScanCodeDown << 16;
+	KeyParam |= 1;
+	PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, Key, KeyParam);
+	Sleep(RangedRand(120, 200));
+	KeyParam |= 1 << 30;
+	KeyParam |= 1 << 31;
+	PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, Key, KeyParam);
+
+	return NULL;
+}
+
+/*PostMessage(WindowsProcList[SelectedItem].hWnd, WM_ACTIVATE, 0, 0);
+SendMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F6, 0x002C0001);
+PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, VK_F6, 0x00020001);
+PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYDOWN, 0x36, 0x00020001);
+Sleep(150);
+PostMessage(WindowsProcList[SelectedItem].hWnd, WM_KEYUP, 0x36, 0xC0020001);*/
+
+DWORD RangedRand(DWORD range_min, DWORD range_max)
+{
+	DWORD r;
+	r = ((double)rand() / RAND_MAX) * (range_max - range_min) + range_min;
+	return r;
 }

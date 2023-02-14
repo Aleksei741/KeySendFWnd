@@ -33,6 +33,8 @@ LRESULT WINAPI DelHook(HWND hwndMain, UINT uMsg, WPARAM wParam, LPARAM lParam)
  ****************************************************************/
 extern CHAR KeyPressUp;
 extern CHAR KeyPressDown;
+extern CHAR KeyScanCodeDown;
+extern CHAR KeyScanCodeUp;
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
     KBDLLHOOKSTRUCT* p = (KBDLLHOOKSTRUCT*)lParam;
@@ -46,10 +48,12 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
         {
         case WM_KEYDOWN:
             KeyPressDown = p->vkCode;
+            KeyScanCodeDown = p->scanCode;
             break;
 
         case WM_KEYUP:
             KeyPressUp = p->vkCode;
+            KeyScanCodeUp = p->scanCode;
             break;
         }
     }

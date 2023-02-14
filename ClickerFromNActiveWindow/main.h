@@ -76,6 +76,7 @@ HWND hWndCurrentWndNum;
 HWND hWndCurrentWndHWnd;
 
 HWND hWndKeyPressUp;
+HWND hWndErrorMassage;
 HWND hWndKeyPressDown;
 
 //Работа
@@ -85,6 +86,8 @@ HANDLE hTreadMain;
 
 CHAR KeyPressUp;
 CHAR KeyPressDown;
+CHAR KeyScanCodeDown;
+CHAR KeyScanCodeUp;
 //----------------------------------------------------------------------------------------------------
 enum
 {
@@ -99,4 +102,6 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 BOOL CALLBACK EnumWndProc(HWND hWnd, LPARAM lParam);
 void MainWindAddWidgets(HWND hWnd);
 DWORD WINAPI MainThread(CONST LPVOID lpParam);
+DWORD RangedRand(DWORD range_min, DWORD range_max);
+UINT KeyPress(UCHAR Key);
 //----------------------------------------------------------------------------------------------------
