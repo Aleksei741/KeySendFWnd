@@ -63,6 +63,12 @@ struct WindowsProcList_DType
 	TCHAR     buffclass[100];
 	HWND	  hWnd;
 };
+
+struct ParametersKey_typedef
+{
+	UINT	pressKey[10];
+	UINT	sendKey[10];
+};
 //----------------------------------------------------------------------------------------------------
 //MainWindow указатели
 HINSTANCE g_hInst;
@@ -75,7 +81,7 @@ HWND hWndCurrentWndClass;
 HWND hWndCurrentWndNum;
 HWND hWndCurrentWndHWnd;
 
-HWND hWndKeyPressUp;
+HWND hWndKeyEmulation;
 HWND hWndErrorMassage;
 HWND hWndKeyPressDown;
 
@@ -88,6 +94,7 @@ CHAR KeyPressUp;
 CHAR KeyPressDown;
 CHAR KeyScanCodeDown;
 CHAR KeyScanCodeUp;
+struct ParametersKey_typedef ParametersKey = { 0 };
 //----------------------------------------------------------------------------------------------------
 enum
 {
@@ -104,4 +111,6 @@ void MainWindAddWidgets(HWND hWnd);
 DWORD WINAPI MainThread(CONST LPVOID lpParam);
 DWORD RangedRand(DWORD range_min, DWORD range_max);
 UINT KeyPress(UCHAR Key);
+DWORD ReadParamFile(void);
+DWORD WriteParamFile(void);
 //----------------------------------------------------------------------------------------------------

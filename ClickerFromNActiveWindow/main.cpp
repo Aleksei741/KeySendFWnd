@@ -74,12 +74,14 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 
 	case WM_CREATE:	//вызываетс€ при создании окна		
 		srand(1792);
+		ReadParamFile();
 		MainWindAddWidgets(hWnd);
 		SetHook(hWnd, NULL, NULL, NULL);
 		hTreadMain = CreateThread(NULL, 0, MainThread, 0, 0, NULL);
 		break;
 
 	case WM_DESTROY:	//взываетс€ при закрытии окна
+		WriteParamFile();
 		CloseHandle(hTreadMain);
 		DelHook(hWnd, NULL, NULL, NULL);
 		PostQuitMessage(0);
@@ -136,7 +138,7 @@ void MainWindAddWidgets(HWND hWnd)
 	//CreateWindow(L"button", L"send", WS_CHILD | WS_VISIBLE, 10, 350, 80, 30, hWnd, (HMENU)ClickButtonSendMassage, g_hInst, NULL);
 
 	hWndKeyPressDown = CreateWindowA("static", "Down: ", WS_VISIBLE | WS_CHILD, 10, 220, 100, 50, hWnd, NULL, g_hInst, NULL);
-	hWndKeyPressUp = CreateWindowA("static", "Up: ", WS_VISIBLE | WS_CHILD, 150, 220, 100, 50, hWnd, NULL, g_hInst, NULL);
+	hWndKeyEmulation = CreateWindowA("static", "Up: ", WS_VISIBLE | WS_CHILD, 150, 220, 100, 50, hWnd, NULL, g_hInst, NULL);
 
 	hWndErrorMassage = CreateWindowA("static", "  ", WS_VISIBLE | WS_CHILD, 300, 220, 100, 50, hWnd, NULL, g_hInst, NULL);
 }
@@ -145,47 +147,46 @@ DWORD WINAPI MainThread(CONST LPVOID lpParam)
 {
 	TCHAR szBuf[128];
 	TCHAR bKeyPressDown = 0;
-	TCHAR bKeyPressUp = 0;
+	TCHAR KeyEmulation = 0;
 	TCHAR ErrorCode = 0;
-	TCHAR FlagSecure = 0;
+	TCHAR FlagEmulationSucsess = 0;
+	UINT cnt;
 	
 	while (1)
 	{
-		StringCchPrintf(szBuf, 128 / sizeof(CHAR), L"Down: %d\0", bKeyPressDown);
+		StringCchPrintf(szBuf, 128 / sizeof(CHAR), L" лавиша нажата: %d\0", bKeyPressDown);
 		SetWindowText(hWndKeyPressDown, szBuf);
 
-		StringCchPrintf(szBuf, 128 / sizeof(CHAR), L"Up: %d\0", KeyPressUp);
-		SetWindowText(hWndKeyPressUp, szBuf);
+		StringCchPrintf(szBuf, 128 / sizeof(CHAR), L"Ёмулируетс€: %d\0", KeyEmulation);
+		SetWindowText(hWndKeyEmulation, szBuf);
 
 		StringCchPrintf(szBuf, 128 / sizeof(CHAR), L"Error: %d\0", ErrorCode);
 		SetWindowText(hWndErrorMassage, szBuf);
 
 		if (KeyPressDown != 0)
 		{
-			switch (KeyPressDown)
+			for (cnt = 0; cnt < 10; cnt++)
 			{
-			case 81:
-
-				KeyPress(0x31);
-				break;
-			case 87:
-				KeyPress(0x32);
-				break;
-			case 69:
-				KeyPress(0x33);
-				break;
-			case 82:
-				KeyPress(0x34);
-				break;
-			case 84:
-				KeyPress(0x35);
-				break;
-			case 89:
-				KeyPress(0x36);
-				break;
+				if (KeyPressDown == ParametersKey.pressKey[cnt])
+				{
+					KeyPress(ParametersKey.sendKey[cnt]);
+					FlagEmulationSucsess = 1;
+					break;
+				}
 			}
+			
 			bKeyPressDown = KeyPressDown;
 			KeyPressDown = 0;
+
+			if (FlagEmulationSucsess != 0)
+			{
+				KeyEmulation = ParametersKey.sendKey[cnt];
+			}
+			else
+			{
+				KeyEmulation = 0;
+			}
+			FlagEmulationSucsess = 0;
 
 			if(ErrorCode==0)
 				ErrorCode = GetLastError();
@@ -226,4 +227,105 @@ DWORD RangedRand(DWORD range_min, DWORD range_max)
 	DWORD r;
 	r = ((double)rand() / RAND_MAX) * (range_max - range_min) + range_min;
 	return r;
+}
+
+LPTSTR ExtractFilePath(LPCTSTR FileName, LPTSTR buf)
+{
+	int i, len = lstrlen(FileName);
+	for (i = len - 1; i >= 0; i--)
+	{
+		if (FileName[i] == '\\')
+			break;
+	}
+	lstrcpyn(buf, FileName, i + 2);
+	return buf;
+}
+
+DWORD ReadParamFile(void)
+{
+	TCHAR szFileName[MAX_PATH], szPath[MAX_PATH];
+	TCHAR szBuf[128];
+	//TCHAR out[128];
+	UINT cnt;
+	DWORD ret;
+
+	ParametersKey = { 
+		{81, 87, 69, 82, 84, 89, 85, 73, 79, 80},
+		{49, 50, 51, 52, 53, 54, 55, 56, 57, 48}
+	};
+	
+	// szFileName - содержит путь к exe-файлу
+	// szPath - содержит путь к папке, в которой находитс€ exe-файл	
+	GetModuleFileName(0, szFileName, MAX_PATH);
+	ExtractFilePath(szFileName, szPath);
+	// szPath - содержит путь к файлу ini
+	StringCchCat(szPath, MAX_PATH, L"setup.ini");
+
+	for (cnt = 0; cnt < 10; cnt++)
+	{
+		StringCchPrintf(szBuf, sizeof(szBuf)/sizeof(szBuf[0]), L"key%d\0", cnt+1);
+
+		ret = GetPrivateProfileInt(
+			L"SEND",
+			szBuf,
+			NULL,
+			szPath
+		);
+
+		if (ret != 0)
+			ParametersKey.sendKey[cnt] = ret;
+
+		ret = GetPrivateProfileInt(
+			L"PRESS",
+			szBuf,
+			NULL,
+			szPath
+		);
+
+		if (ret != 0)
+			ParametersKey.pressKey[cnt] = ret;
+	}
+
+	return NULL;
+}
+
+DWORD WriteParamFile(void)
+{
+	TCHAR szFileName[MAX_PATH], szPath[MAX_PATH];
+	TCHAR szBuf[128];
+	TCHAR data[128];
+	UINT cnt;
+	DWORD ret;
+
+	// szFileName - содержит путь к exe-файлу
+	// szPath - содержит путь к папке, в которой находитс€ exe-файл	
+	GetModuleFileName(0, szFileName, MAX_PATH);
+	ExtractFilePath(szFileName, szPath);
+	// szPath - содержит путь к файлу ini
+	StringCchCat(szPath, MAX_PATH, L"setup.ini");
+
+	for (cnt = 0; cnt < 10; cnt++)
+	{
+		StringCchPrintf(szBuf, sizeof(szBuf) / sizeof(szBuf[0]), L"key%d\0", cnt + 1);
+		StringCchPrintf(data, sizeof(data) / sizeof(data[0]), L"%d\0", ParametersKey.sendKey[cnt]);
+
+		ret = WritePrivateProfileString(
+			L"SEND",
+			szBuf,
+			data,
+			szPath
+		);
+
+		StringCchPrintf(data, sizeof(data) / sizeof(data[0]), L"%d\0", ParametersKey.pressKey[cnt]);
+
+		ret = WritePrivateProfileString(
+			L"PRESS",
+			szBuf,
+			data,
+			szPath
+		);
+
+	}
+
+	return NULL;
 }
